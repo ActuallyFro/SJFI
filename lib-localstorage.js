@@ -4,12 +4,13 @@ window.storeJSONObjectsIntoKey = function(storageKey, storageData, debug = false
   localStorage.setItem(storageKey, JSON.stringify(storageData));
 };
 
-window.loadJSONObjectsFromKey = function(storageKey, storageData, debug = false) {
+window.loadJSONObjectsFromKey = function(storageKey, debug = false) {
   if (debug) console.log("[SJFI] [DEBUG] loadJSONObjectsIntoKey(" + storageKey + ") called");
   const storedGraphObjects = localStorage.getItem(storageKey);
   if (storedGraphObjects) {
-    storageData = JSON.parse(storedGraphObjects);
+    return JSON.parse(storedGraphObjects);
   }
+  return null;
 };
 
 window.resetLocalStorageByKey = function(storageKey, storageData, debug = false) {
