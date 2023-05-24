@@ -4,18 +4,26 @@ window.storeJSONObjectsIntoKey = function(storageKey, storageData, debug = false
   localStorage.setItem(storageKey, JSON.stringify(storageData));
 };
 
-window.loadJSONObjectsFromKey = function(storageKey, storageData, debug = false) {
+window.loadJSONObjectsFromKey = function(storageKey, debug = false) {
   if (debug) console.log("[SJFI] [DEBUG] loadJSONObjectsIntoKey(" + storageKey + ") called");
   const storedGraphObjects = localStorage.getItem(storageKey);
   if (storedGraphObjects) {
-    storageData = JSON.parse(storedGraphObjects);
+    let parsedData = JSON.parse(storedGraphObjects);
+    if (parsedData !== null && typeof parsedData === 'object' && !Array.isArray(parsedData)) {
+        return parsedData;
+    } else {
+        console.error("[SJFI] [ERROR] Data loaded from key is not an object.");
+        return null;
+    }
   }
+
+  return null;
 };
 
-window.resetLocalStorageByKey = function(storageKey, storageData, debug = false) {
+window.resetLocalStorageByKey = function(storageKey, debug = false) {
   if (debug) console.log("[SJFI] [DEBUG] resetLocalStorageByKey(" + storageKey + ") called");
   localStorage.removeItem(storageKey);
-  storageData = [];
+  return {};
 };
 
 window.clearLocalStorageALLKeys = function(debug = false) {
