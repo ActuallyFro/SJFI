@@ -8,12 +8,17 @@ window.loadJSONObjectsFromKey = function(storageKey, debug = false) {
   if (debug) console.log("[SJFI] [DEBUG] loadJSONObjectsIntoKey(" + storageKey + ") called");
   const storedGraphObjects = localStorage.getItem(storageKey);
   if (storedGraphObjects) {
-    let parsedData = JSON.parse(storedGraphObjects);
-    if (parsedData !== null && typeof parsedData === 'object' && !Array.isArray(parsedData)) {
+    try {
+      let parsedData = JSON.parse(storedGraphObjects);
+      if (parsedData !== null && typeof parsedData === 'object' && !Array.isArray(parsedData)) {
         return parsedData;
-    } else {
+      } else {
         console.error("[SJFI] [ERROR] Data loaded from key is not an object.");
         return null;
+      }
+    } catch (error) {
+      console.error("[SJFI] [ERROR] Failed to parse data from key:", error);
+      return null;
     }
   }
 
