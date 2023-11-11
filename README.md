@@ -117,3 +117,98 @@ Example SPA for LocalStorage
   </script>
 </html>
 ```
+
+Example SPA for JSON File I/O
+-----------------------------
+**Ensure to update/save the PROPER path for the lib-JSON-ImpExp.js file!**
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>SJFI: EXAMPLE - HTML Table I/O with .json File</title>
+
+    <script type="text/javascript" src="../lib-JSON-ImpExp.js"></script>
+
+  </head>
+  <body>
+    <h1>Welcome to my SPA!</h1>
+
+    <table border="1">
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+      </tr>
+      <tr>
+        <td>name</td>
+        <td id="TableName"></td>
+      </tr>
+      <tr>
+        <td>message</td>
+        <td id="TableMessage"></td>
+      </tr>
+    </table>
+
+    <hr>
+    <button class="btn btn-primary" style="color: blue;" id="export-button" onclick="JSONExport()">Export Current Table</button>
+    <button class="btn btn-primary" style="color: green;" id="import-button">Import New Table</button> <!-- Note it's done via listener vs. direct function call!  -->
+    <input type="file" id="import-file" style="display:none">
+  </body>
+
+  <script>
+    //------------------------
+    //0. DEFAULT VARS
+    window.SJFI_storageKey = 'Example_LocalStorage-DATA';    
+
+    window.SJFI_data = { // Object === {} <can use .find()> ; Array === [] <maybe .find()?>; String === "" <use it as a .(name)>
+      name: "A Default Name",
+      message: "This data is the default message"
+    };
+
+    //General Updating Function
+    //-~-~-~-~-~-~-~-~-~-~-~
+    function reloadTableData() {
+      document.getElementById('TableName').innerHTML = window.SJFI_data.name; //defaults to object-defined name
+      document.getElementById('TableMessage').innerHTML = window.SJFI_data.message; //defaults to object-defined message
+    }
+
+    // ---------------------------
+    // I. JSON Export
+    // ---------------------------
+    JSONExport = function() {
+      SJFIJSONExport(window.SJFI_data,"Table-Data.json");
+    }
+
+    // ---------------------------
+    // II. JSON Import
+    // ---------------------------
+    window.importJSONObjects = async function(event) {
+      const importedData = await SJFIJSONImport(event.target.files[0]);
+
+      if (importedData) {
+        window.SJFI_data = importedData;
+        reloadTableData();
+
+        //CONSIDER -- loading data ALSO into the LocalStorage data!
+        //Example: storeJSONObjectsIntoKey(window.SJFI_storageKey, window.SJFI_data);
+      }
+    }
+
+    //------------------------
+    //III. Default Loads
+    //------------------------
+    reloadTableData(); //On page load this runs (so the default data is shown)
+
+    //Import Button Listener
+    //-~-~-~-~-~-~-~-~-~-~-~
+    const importFileInput = document.getElementById('import-file');
+    importFileInput.addEventListener('change', window.importJSONObjects);
+
+    const importButton = document.getElementById('import-button');
+      importButton.addEventListener('click', () => {
+      importFileInput.click();
+    });
+
+  </script>
+</html>
+```
