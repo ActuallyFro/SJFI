@@ -1,5 +1,5 @@
 
-window.SJFIJSONExport = function(fileToWrite, debug = false) {
+window.SJFIJSONExport = function(fileToWrite, fileName = 'graph-objects.json', debug = false) {
   if (debug) {
     console.log("X.X.2 Export graph objects to JSON file");
   }
@@ -9,7 +9,7 @@ window.SJFIJSONExport = function(fileToWrite, debug = false) {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'graph-objects.json';
+  a.download = fileName;
   a.click();
   URL.revokeObjectURL(url);
 }
